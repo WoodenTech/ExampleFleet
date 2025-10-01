@@ -1,0 +1,293 @@
+@page
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@model BDElite.Fleet.UI.Pages.AddProductModel
+@{
+    ViewData["Title"] = "Add Insurance Product";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-header mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 mb-2">Add Insurance Product</h1>
+                        <p class="lead mb-0">Create a new insurance product for your portfolio</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/ProviderConsole" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Console
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger mb-4">
+                            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Please correct the following errors:</h6>
+                            <div asp-validation-summary="ModelOnly" class="mb-0"></div>
+                        </div>
+                    }
+
+                    <form id="productForm" method="post">
+                        <!-- Basic Product Information -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-info-circle me-2 text-primary"></i>Product Information
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="productName" name="ProductName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="productCode" class="form-label">Product Code</label>
+                                <input type="text" class="form-control" id="productCode" name="ProductCode" required>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="Description" rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Model -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-calculator me-2 text-success"></i>Pricing Model
+                                </h5>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Cost Calculation Method</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="PricingModel" id="perPolicy" value="PerPolicy" checked>
+                                    <label class="form-check-label" for="perPolicy">
+                                        <strong>Per Policy</strong> - Fixed cost per insurance policy
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="PricingModel" id="perVehicle" value="PerVehicle">
+                                    <label class="form-check-label" for="perVehicle">
+                                        <strong>Per Vehicle</strong> - Cost calculated per vehicle with adjustments
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle-Based Adjustments (Hidden by default) -->
+                        <div id="vehicleAdjustments" class="row mb-4" style="display: none;">
+                            <div class="col-12">
+                                <h6 class="text-muted mb-3">Vehicle-Based Pricing Adjustments</h6>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="adjustForAge" name="AdjustForAge">
+                                    <label class="form-check-label" for="adjustForAge">
+                                        Adjust for Vehicle Age
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="adjustForWeight" name="AdjustForWeight">
+                                    <label class="form-check-label" for="adjustForWeight">
+                                        Adjust for Vehicle Weight
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="adjustForType" name="AdjustForType">
+                                    <label class="form-check-label" for="adjustForType">
+                                        Adjust for Vehicle Type
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Details -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-pound-sign me-2 text-info"></i>Pricing Details
+                                </h5>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="basePrice" class="form-label">Base Price (£)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input type="number" class="form-control" id="basePrice" name="BasePrice" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="ipt" class="form-label">IPT (%)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="ipt" name="IPT" step="0.01" min="0" max="100" required>
+                                    <span class="input-group-text">%</span>
+                                </div>
+                                <div class="form-text">Insurance Premium Tax</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="providerCommission" class="form-label">Provider Commission (%)</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" id="providerCommission" name="ProviderCommission" step="0.01" min="0" max="100" required>
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Coverage Options -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-shield-alt me-2 text-warning"></i>Coverage Options
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="maxCoverage" class="form-label">Maximum Coverage (£)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input type="number" class="form-control" id="maxCoverage" name="MaxCoverage" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="deductible" class="form-label">Deductible (£)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">£</span>
+                                    <input type="number" class="form-control" id="deductible" name="Deductible" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label class="form-label">Coverage Types</label>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="thirdParty" name="CoverageTypes" value="ThirdParty">
+                                            <label class="form-check-label" for="thirdParty">Third Party</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="comprehensive" name="CoverageTypes" value="Comprehensive">
+                                            <label class="form-check-label" for="comprehensive">Comprehensive</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="collision" name="CoverageTypes" value="Collision">
+                                            <label class="form-check-label" for="collision">Collision</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/ProviderConsole" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancel
+                                    </a>
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary me-2" id="previewBtn">
+                                            <i class="fas fa-eye me-2"></i>Preview
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-plus me-2"></i>Create Product
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="col-lg-4">
+            <div class="card" id="previewPanel" style="display: none;">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-eye me-2"></i>Product Preview</h6>
+                </div>
+                <div class="card-body">
+                    <div id="previewContent">
+                        <!-- Preview content will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const perPolicyRadio = document.getElementById('perPolicy');
+            const perVehicleRadio = document.getElementById('perVehicle');
+            const vehicleAdjustments = document.getElementById('vehicleAdjustments');
+            const previewBtn = document.getElementById('previewBtn');
+            const previewPanel = document.getElementById('previewPanel');
+            const previewContent = document.getElementById('previewContent');
+
+            // Toggle vehicle adjustments visibility
+            function toggleVehicleAdjustments() {
+                if (perVehicleRadio.checked) {
+                    vehicleAdjustments.style.display = 'block';
+                } else {
+                    vehicleAdjustments.style.display = 'none';
+                }
+            }
+
+            perPolicyRadio.addEventListener('change', toggleVehicleAdjustments);
+            perVehicleRadio.addEventListener('change', toggleVehicleAdjustments);
+
+            // Preview functionality
+            previewBtn.addEventListener('click', function() {
+                updatePreview();
+                previewPanel.style.display = 'block';
+            });
+
+            function updatePreview() {
+                const formData = new FormData(document.getElementById('productForm'));
+                let html = '<div class="preview-item">';
+
+                html += `<h6>${formData.get('ProductName') || 'Product Name'}</h6>`;
+                html += `<p class="text-muted small">${formData.get('ProductCode') || 'PROD-CODE'}</p>`;
+                html += `<p>${formData.get('Description') || 'Product description...'}</p>`;
+
+                html += '<hr>';
+                html += `<strong>Pricing:</strong> ${formData.get('PricingModel')}<br>`;
+                html += `<strong>Base Price:</strong> £${formData.get('BasePrice') || '0.00'}<br>`;
+                html += `<strong>IPT:</strong> ${formData.get('IPT') || '0'}%<br>`;
+                html += `<strong>Commission:</strong> ${formData.get('ProviderCommission') || '0'}%<br>`;
+
+                if (formData.get('PricingModel') === 'PerVehicle') {
+                    html += '<hr><strong>Adjustments:</strong><br>';
+                    if (formData.get('AdjustForAge')) html += '• Vehicle Age<br>';
+                    if (formData.get('AdjustForWeight')) html += '• Vehicle Weight<br>';
+                    if (formData.get('AdjustForType')) html += '• Vehicle Type<br>';
+                }
+
+                html += '</div>';
+                previewContent.innerHTML = html;
+            }
+
+            // Auto-update preview when form changes
+            document.getElementById('productForm').addEventListener('input', function() {
+                if (previewPanel.style.display === 'block') {
+                    updatePreview();
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,821 @@
+@page "/FleetPolicy/{policyId}"
+@model FleetPolicyDetailsModel
+@{
+    ViewData["Title"] = "Fleet Policy Details";
+}
+
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb custom-breadcrumb">
+        <li class="breadcrumb-item">
+            <a asp-page="/FleetDashboard">
+                <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            <i class="fas fa-file-contract me-1"></i>Policy Details
+        </li>
+    </ol>
+</nav>
+
+<!-- Policy Header -->
+<div class="policy-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <div class="policy-info">
+                <h1 class="policy-title">Commercial Fleet Policy</h1>
+                <div class="policy-meta">
+                    <span class="policy-number">Policy #: <strong>CFP-2024-FL-001234</strong></span>
+                    <span class="policy-status active">
+                        <i class="fas fa-shield-check me-1"></i>Active
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-outline-primary me-2">
+                <i class="fas fa-edit me-2"></i>Modify Policy
+            </button>
+            <div class="dropdown d-inline">
+                <button class="btn btn-success dropdown-toggle" type="button" id="downloadDropdown" data-bs-toggle="dropdown">
+                    <i class="fas fa-download me-2"></i>Download Documents
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="downloadDropdown">
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-certificate me-2"></i>Insurance Certificate</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-pdf me-2"></i>Policy Document</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-file-alt me-2"></i>Coverage Summary</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="fas fa-download me-2"></i>Download All</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Policy Summary Cards -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="policy-stat-card">
+            <div class="stat-icon primary">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-content">
+                <h4 class="stat-value">Jan 15, 2024</h4>
+                <p class="stat-label">Policy Start Date</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="policy-stat-card">
+            <div class="stat-icon warning">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <div class="stat-content">
+                <h4 class="stat-value">Jan 14, 2025</h4>
+                <p class="stat-label">Policy End Date</p>
+                <small class="renewal-notice">
+                    <i class="fas fa-bell me-1"></i>Renewal due in 45 days
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="policy-stat-card">
+            <div class="stat-icon success">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="stat-content">
+                <h4 class="stat-value">24</h4>
+                <p class="stat-label">Covered Vehicles</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="policy-stat-card">
+            <div class="stat-icon info">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-content">
+                <h4 class="stat-value">$12,450</h4>
+                <p class="stat-label">Annual Premium</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <!-- Coverage Details -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Coverage Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="coverage-grid">
+                    <div class="coverage-item">
+                        <div class="coverage-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="coverage-details">
+                            <h6>Liability Coverage</h6>
+                            <p class="coverage-limit">$1,000,000 per occurrence</p>
+                            <p class="coverage-desc">Bodily injury and property damage liability</p>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <div class="coverage-icon">
+                            <i class="fas fa-car-crash"></i>
+                        </div>
+                        <div class="coverage-details">
+                            <h6>Collision Coverage</h6>
+                            <p class="coverage-limit">Actual Cash Value</p>
+                            <p class="coverage-desc">$500 deductible per vehicle</p>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <div class="coverage-icon">
+                            <i class="fas fa-umbrella"></i>
+                        </div>
+                        <div class="coverage-details">
+                            <h6>Comprehensive Coverage</h6>
+                            <p class="coverage-limit">Actual Cash Value</p>
+                            <p class="coverage-desc">$250 deductible per vehicle</p>
+                        </div>
+                    </div>
+                    <div class="coverage-item">
+                        <div class="coverage-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="coverage-details">
+                            <h6>Uninsured Motorist</h6>
+                            <p class="coverage-limit">$100,000 per person</p>
+                            <p class="coverage-desc">$300,000 per accident</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Covered Vehicles -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Covered Vehicles (24)</h5>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-plus me-1"></i>Add Vehicle
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-download me-1"></i>Export List
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Vehicle</th>
+                                <th>VIN</th>
+                                <th>Year</th>
+                                <th>Value</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-truck"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Ford Transit #001</strong>
+                                            <br><small class="text-muted">License: ABC-123</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>1FTBW2CM5GKA12345</code></td>
+                                <td>2022</td>
+                                <td>$45,000</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" title="Remove from Policy">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-car"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Toyota Camry #002</strong>
+                                            <br><small class="text-muted">License: XYZ-789</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>4T1BF1FK5CU123456</code></td>
+                                <td>2021</td>
+                                <td>$28,500</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" title="Remove from Policy">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="vehicle-info">
+                                        <div class="vehicle-icon">
+                                            <i class="fas fa-van-shuttle"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Mercedes Sprinter #003</strong>
+                                            <br><small class="text-muted">License: DEF-456</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><code>WD3PE8CD1C5123789</code></td>
+                                <td>2023</td>
+                                <td>$52,000</td>
+                                <td><span class="badge bg-success">Active</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning" title="Remove from Policy">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <nav aria-label="Vehicle pagination" class="mt-3">
+                    <ul class="pagination pagination-sm justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-lg-4">
+        <!-- Policy Documents -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Policy Documents</h5>
+            </div>
+            <div class="card-body">
+                <div class="document-list">
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="document-info">
+                            <h6>Insurance Certificate</h6>
+                            <small>Updated: Nov 30, 2024</small>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="document-info">
+                            <h6>Policy Document</h6>
+                            <small>Issued: Jan 15, 2024</small>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="document-info">
+                            <h6>Coverage Summary</h6>
+                            <small>Updated: Nov 30, 2024</small>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="document-item">
+                        <div class="document-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="document-info">
+                            <h6>Premium Invoice</h6>
+                            <small>Due: Dec 15, 2024</small>
+                        </div>
+                        <div class="document-actions">
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Policy Actions -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Policy Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="policy-actions">
+                    <button class="action-btn">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Vehicle</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-minus"></i>
+                        <span>Remove Vehicle</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-edit"></i>
+                        <span>Modify Coverage</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>Renew Policy</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-file-medical-alt"></i>
+                        <span>File Claim</span>
+                    </button>
+                    <button class="action-btn">
+                        <i class="fas fa-phone"></i>
+                        <span>Contact Agent</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                <div class="activity-timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-icon success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Premium Payment Received</h6>
+                            <p>Monthly premium of $1,037.50 processed successfully</p>
+                            <small>2 days ago</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon info">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Certificate Updated</h6>
+                            <p>Insurance certificate regenerated with new information</p>
+                            <small>1 week ago</small>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-icon warning">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="timeline-content">
+                            <h6>Vehicle Added</h6>
+                            <p>Mercedes Sprinter #003 added to policy</p>
+                            <small>2 weeks ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Breadcrumb Styling */
+.custom-breadcrumb {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.5rem;
+}
+
+.custom-breadcrumb .breadcrumb-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.custom-breadcrumb .breadcrumb-item a:hover {
+    color: var(--secondary-color);
+}
+
+.custom-breadcrumb .breadcrumb-item.active {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+/* Policy Header */
+.policy-header {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-soft);
+}
+
+.policy-title {
+    font-size: 2rem;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.5rem;
+}
+
+.policy-meta {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.policy-number {
+    font-size: 1.1rem;
+    color: var(--dark-color);
+}
+
+.policy-status.active {
+    background: var(--success-gradient);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+}
+
+/* Policy Stats */
+.policy-stat-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-soft);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.policy-stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-medium);
+}
+
+.policy-stat-card .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.policy-stat-card .stat-icon.primary {
+    background: var(--primary-gradient);
+}
+
+.policy-stat-card .stat-icon.success {
+    background: var(--success-gradient);
+}
+
+.policy-stat-card .stat-icon.warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.policy-stat-card .stat-icon.info {
+    background: var(--secondary-gradient);
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--dark-color);
+    margin-bottom: 0.25rem;
+}
+
+.stat-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: 0;
+}
+
+.renewal-notice {
+    color: var(--accent-color);
+    font-weight: 600;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Coverage Grid */
+.coverage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.coverage-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.5rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.coverage-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-3px);
+}
+
+.coverage-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    font-size: 1.2rem;
+}
+
+.coverage-details h6 {
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.coverage-limit {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+.coverage-desc {
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+/* Document List */
+.document-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.document-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.document-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateX(5px);
+}
+
+.document-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: var(--success-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-info h6 {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.25rem;
+}
+
+.document-info small {
+    color: var(--dark-color);
+    opacity: 0.7;
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Policy Actions */
+.policy-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.action-btn {
+    background: rgba(102, 126, 234, 0.05);
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    color: var(--dark-color);
+    text-decoration: none;
+}
+
+.action-btn:hover {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.action-btn i {
+    font-size: 1.3rem;
+}
+
+.action-btn span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Timeline */
+.activity-timeline {
+    position: relative;
+}
+
+.timeline-item {
+    display: flex;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 32px;
+    width: 2px;
+    height: calc(100% + 0.5rem);
+    background: rgba(102, 126, 234, 0.2);
+}
+
+.timeline-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.timeline-icon.success {
+    background: var(--success-gradient);
+}
+
+.timeline-icon.info {
+    background: var(--primary-gradient);
+}
+
+.timeline-icon.warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.timeline-content h6 {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.25rem;
+}
+
+.timeline-content p {
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+    font-size: 0.9rem;
+}
+
+.timeline-content small {
+    color: var(--dark-color);
+    opacity: 0.6;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments */
+@@media (max-width: 768px) {
+    .policy-header {
+        padding: 1.5rem;
+    }
+
+    .policy-meta {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .coverage-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .policy-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .document-actions {
+        flex-direction: column;
+    }
+}
+</style>
+
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+@functions {
+    public class FleetPolicyDetailsModel : PageModel
+    {
+        public void OnGet(string policyId)
+        {
+            // In a real implementation, you would fetch policy details from the database
+            // using the policyId parameter
+        }
+    }
+}

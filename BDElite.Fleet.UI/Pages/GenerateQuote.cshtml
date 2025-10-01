@@ -1,0 +1,424 @@
+@page
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@model BDElite.Fleet.UI.Pages.GenerateQuoteModel
+@{
+    ViewData["Title"] = "Generate Quote";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="dashboard-header mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="display-4 mb-2">Generate Quote</h1>
+                        <p class="lead mb-0">Create insurance quotes for fleet managers</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <a href="/BrokerPortal" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Portal
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger mb-4">
+            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Please correct the following errors:</h6>
+            <div asp-validation-summary="ModelOnly" class="mb-0"></div>
+        </div>
+    }
+
+    <div class="row">
+        <!-- Quote Form -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form id="quoteForm" method="post">
+                        <!-- Fleet Manager Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-user-tie me-2 text-primary"></i>Fleet Manager Details
+                                </h5>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="companyName" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="companyName" name="CompanyName" asp-for="CompanyName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contactName" class="form-label">Contact Name</label>
+                                <input type="text" class="form-control" id="contactName" name="ContactName" asp-for="ContactName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contactEmail" class="form-label">Contact Email</label>
+                                <input type="email" class="form-control" id="contactEmail" name="ContactEmail" asp-for="ContactEmail" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="contactPhone" class="form-label">Contact Phone</label>
+                                <input type="tel" class="form-control" id="contactPhone" name="ContactPhone" asp-for="ContactPhone" required>
+                            </div>
+                        </div>
+
+                        <!-- Product Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-shield-alt me-2 text-success"></i>Insurance Product
+                                </h5>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="selectedProduct" class="form-label">Select Insurance Product</label>
+                                <select class="form-select" id="selectedProduct" name="SelectedProductId" asp-for="SelectedProductId" required>
+                                    <option value="">Choose an insurance product...</option>
+                                    @foreach (var product in Model.AvailableProducts)
+                                    {
+                                        <option value="@product.Id"
+                                                data-base-rate="@product.BaseRate"
+                                                data-markup="@product.BrokerMarkupPercentage"
+                                                data-name="@product.Name">
+                                            @product.Name - £@product.BaseRate.ToString("N2") base rate
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                            <div id="productDetails" class="col-12 mb-3" style="display: none;">
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading">Product Details</h6>
+                                    <div id="productInfo"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Vehicle Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-truck me-2 text-warning"></i>Vehicle Selection
+                                </h5>
+                                <p class="text-muted mb-3">Add vehicles to be included in this quote</p>
+                            </div>
+                            <div class="col-12">
+                                <div id="vehicleList">
+                                    <div class="vehicle-item mb-3" data-vehicle-index="0">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row align-items-center">
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Vehicle Type</label>
+                                                        <select class="form-select vehicle-type" name="Vehicles[0].VehicleType" required>
+                                                            <option value="">Select type...</option>
+                                                            <option value="Car">Car</option>
+                                                            <option value="Truck">Truck</option>
+                                                            <option value="Van">Van</option>
+                                                            <option value="Motorcycle">Motorcycle</option>
+                                                            <option value="Bus">Bus</option>
+                                                            <option value="Trailer">Trailer</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Make</label>
+                                                        <input type="text" class="form-control" name="Vehicles[0].Make" placeholder="e.g. Ford" required>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Model</label>
+                                                        <input type="text" class="form-control" name="Vehicles[0].Model" placeholder="e.g. Transit" required>
+                                                    </div>
+                                                    <div class="col-md-2 mb-2">
+                                                        <label class="form-label">Year</label>
+                                                        <input type="number" class="form-control vehicle-year" name="Vehicles[0].Year" min="1990" max="2025" required>
+                                                    </div>
+                                                    <div class="col-md-1 mb-2">
+                                                        <label class="form-label">&nbsp;</label>
+                                                        <button type="button" class="btn btn-outline-danger w-100 remove-vehicle" title="Remove Vehicle" style="display: none;">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" id="addVehicle" class="btn btn-outline-primary">
+                                    <i class="fas fa-plus me-2"></i>Add Another Vehicle
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Coverage Selection -->
+                        <div class="row mb-4">
+                            <div class="col-12">
+                                <h5 class="card-title mb-3">
+                                    <i class="fas fa-umbrella me-2 text-info"></i>Coverage Options
+                                </h5>
+                            </div>
+                            <div id="coverageOptions" class="col-12">
+                                <p class="text-muted">Select a product to see available coverage options</p>
+                            </div>
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <a href="/BrokerPortal" class="btn btn-outline-secondary">
+                                        <i class="fas fa-times me-2"></i>Cancel
+                                    </a>
+                                    <div>
+                                        <button type="button" class="btn btn-outline-primary me-2" id="calculateBtn">
+                                            <i class="fas fa-calculator me-2"></i>Calculate Premium
+                                        </button>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-file-invoice me-2"></i>Generate Quote
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quote Summary -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-file-invoice me-2"></i>Quote Summary</h6>
+                </div>
+                <div class="card-body">
+                    <div id="quoteSummary">
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-calculator fa-2x mb-3"></i>
+                            <p>Fill in the details to see quote calculation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-info btn-sm">
+                            <i class="fas fa-search me-2"></i>Fleet Manager Lookup
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-copy me-2"></i>Duplicate Last Quote
+                        </button>
+                        <button type="button" class="btn btn-outline-warning btn-sm">
+                            <i class="fas fa-save me-2"></i>Save as Draft
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            let vehicleIndex = 1;
+            const addVehicleBtn = document.getElementById('addVehicle');
+            const vehicleList = document.getElementById('vehicleList');
+            const selectedProduct = document.getElementById('selectedProduct');
+            const productDetails = document.getElementById('productDetails');
+            const productInfo = document.getElementById('productInfo');
+            const coverageOptions = document.getElementById('coverageOptions');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const quoteSummary = document.getElementById('quoteSummary');
+
+            // Product selection change
+            selectedProduct.addEventListener('change', function() {
+                const option = this.options[this.selectedIndex];
+                if (option.value) {
+                    const baseRate = option.dataset.baseRate;
+                    const markup = option.dataset.markup;
+                    const name = option.dataset.name;
+
+                    productInfo.innerHTML = `
+                        <strong>${name}</strong><br>
+                        Base Rate: £${parseFloat(baseRate).toFixed(2)}<br>
+                        Broker Markup: ${parseFloat(markup).toFixed(2)}%<br>
+                        Final Rate: £${(parseFloat(baseRate) * (1 + parseFloat(markup) / 100)).toFixed(2)}
+                    `;
+                    productDetails.style.display = 'block';
+
+                    // Show coverage options (simplified for demo)
+                    coverageOptions.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="thirdParty" name="SelectedCoverages" value="ThirdParty" checked>
+                                    <label class="form-check-label" for="thirdParty">Third Party Liability</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="comprehensive" name="SelectedCoverages" value="Comprehensive">
+                                    <label class="form-check-label" for="comprehensive">Comprehensive</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="collision" name="SelectedCoverages" value="Collision">
+                                    <label class="form-check-label" for="collision">Collision</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="cargo" name="SelectedCoverages" value="Cargo">
+                                    <label class="form-check-label" for="cargo">Cargo Protection</label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    productDetails.style.display = 'none';
+                    coverageOptions.innerHTML = '<p class="text-muted">Select a product to see available coverage options</p>';
+                }
+                updateQuoteSummary();
+            });
+
+            // Add vehicle functionality
+            addVehicleBtn.addEventListener('click', function() {
+                const vehicleItem = document.createElement('div');
+                vehicleItem.className = 'vehicle-item mb-3';
+                vehicleItem.dataset.vehicleIndex = vehicleIndex;
+                vehicleItem.innerHTML = `
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label">Vehicle Type</label>
+                                    <select class="form-select vehicle-type" name="Vehicles[${vehicleIndex}].VehicleType" required>
+                                        <option value="">Select type...</option>
+                                        <option value="Car">Car</option>
+                                        <option value="Truck">Truck</option>
+                                        <option value="Van">Van</option>
+                                        <option value="Motorcycle">Motorcycle</option>
+                                        <option value="Bus">Bus</option>
+                                        <option value="Trailer">Trailer</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label">Make</label>
+                                    <input type="text" class="form-control" name="Vehicles[${vehicleIndex}].Make" placeholder="e.g. Ford" required>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label class="form-label">Model</label>
+                                    <input type="text" class="form-control" name="Vehicles[${vehicleIndex}].Model" placeholder="e.g. Transit" required>
+                                </div>
+                                <div class="col-md-2 mb-2">
+                                    <label class="form-label">Year</label>
+                                    <input type="number" class="form-control vehicle-year" name="Vehicles[${vehicleIndex}].Year" min="1990" max="2025" required>
+                                </div>
+                                <div class="col-md-1 mb-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="button" class="btn btn-outline-danger w-100 remove-vehicle" title="Remove Vehicle">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                vehicleList.appendChild(vehicleItem);
+                vehicleIndex++;
+                updateRemoveButtons();
+                updateQuoteSummary();
+            });
+
+            // Remove vehicle functionality
+            vehicleList.addEventListener('click', function(e) {
+                if (e.target.closest('.remove-vehicle')) {
+                    e.target.closest('.vehicle-item').remove();
+                    updateRemoveButtons();
+                    updateQuoteSummary();
+                }
+            });
+
+            // Update remove button visibility
+            function updateRemoveButtons() {
+                const vehicles = vehicleList.querySelectorAll('.vehicle-item');
+                vehicles.forEach((vehicle, index) => {
+                    const removeBtn = vehicle.querySelector('.remove-vehicle');
+                    removeBtn.style.display = vehicles.length > 1 ? 'block' : 'none';
+                });
+            }
+
+            // Calculate premium
+            calculateBtn.addEventListener('click', function() {
+                updateQuoteSummary();
+            });
+
+            // Update quote summary
+            function updateQuoteSummary() {
+                const selectedOption = selectedProduct.options[selectedProduct.selectedIndex];
+                const vehicles = vehicleList.querySelectorAll('.vehicle-item');
+
+                if (!selectedOption.value || vehicles.length === 0) {
+                    quoteSummary.innerHTML = `
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-calculator fa-2x mb-3"></i>
+                            <p>Fill in the details to see quote calculation</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const baseRate = parseFloat(selectedOption.dataset.baseRate);
+                const markup = parseFloat(selectedOption.dataset.markup);
+                const vehicleCount = vehicles.length;
+
+                const basePremium = baseRate * vehicleCount;
+                const brokerMarkup = basePremium * (markup / 100);
+                const totalPremium = basePremium + brokerMarkup;
+
+                quoteSummary.innerHTML = `
+                    <div class="quote-breakdown">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Vehicle Count:</span>
+                            <strong>${vehicleCount}</strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Base Rate per Vehicle:</span>
+                            <span>£${baseRate.toFixed(2)}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Base Premium:</span>
+                            <span>£${basePremium.toFixed(2)}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Broker Markup (${markup.toFixed(2)}%):</span>
+                            <span>£${brokerMarkup.toFixed(2)}</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total Annual Premium:</strong>
+                            <strong class="text-primary">£${totalPremium.toFixed(2)}</strong>
+                        </div>
+                        <div class="text-center">
+                            <small class="text-muted">Estimated quote - final pricing subject to underwriting</small>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Form change listeners
+            document.getElementById('quoteForm').addEventListener('input', function() {
+                updateQuoteSummary();
+            });
+
+            // Initial setup
+            updateRemoveButtons();
+        });
+    </script>
+}

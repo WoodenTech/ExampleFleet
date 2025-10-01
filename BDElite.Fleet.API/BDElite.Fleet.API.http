@@ -1,0 +1,47 @@
+@BDElite.Fleet.API_HostAddress = http://localhost:5132
+
+### Get all vehicles
+GET {{BDElite.Fleet.API_HostAddress}}/api/vehicles
+Accept: application/json
+
+### Get vehicle by ID
+GET {{BDElite.Fleet.API_HostAddress}}/api/vehicles/{{vehicleId}}
+Accept: application/json
+
+### Create new vehicle
+POST {{BDElite.Fleet.API_HostAddress}}/api/vehicles
+Content-Type: application/json
+
+{
+  "make": "Ford",
+  "model": "Transit",
+  "year": 2023,
+  "licensePlate": "ABC123",
+  "vin": "1FTBW2CM5GKA12345",
+  "status": 0,
+  "mileage": 15000
+}
+
+### Update vehicle
+PUT {{BDElite.Fleet.API_HostAddress}}/api/vehicles/{{vehicleId}}
+Content-Type: application/json
+
+{
+  "id": "{{vehicleId}}",
+  "make": "Ford",
+  "model": "Transit",
+  "year": 2023,
+  "licensePlate": "ABC123",
+  "vin": "1FTBW2CM5GKA12345",
+  "status": 1,
+  "mileage": 16000
+}
+
+### Delete vehicle
+DELETE {{BDElite.Fleet.API_HostAddress}}/api/vehicles/{{vehicleId}}
+
+### Get vehicles by status
+GET {{BDElite.Fleet.API_HostAddress}}/api/vehicles/status/0
+Accept: application/json
+
+###

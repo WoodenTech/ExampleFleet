@@ -1,0 +1,611 @@
+@page
+@model BrokerPortalModel
+@{
+    ViewData["Title"] = "Insurance Broker Portal";
+}
+
+<div class="dashboard-header mb-4">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="dashboard-title">Insurance Broker Portal</h1>
+            <p class="dashboard-subtitle">Manage clients, generate quotes, and track commissions</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-success me-2">
+                <i class="fas fa-user-plus me-2"></i>Add Client
+            </button>
+            <a href="/GenerateQuote" class="btn btn-primary">
+                <i class="fas fa-calculator me-2"></i>Generate Quote
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Stats -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card broker">
+            <div class="stat-icon success">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">42</h3>
+                <p class="stat-label">Active Clients</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 5 new this month
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card broker">
+            <div class="stat-icon">
+                <i class="fas fa-file-invoice-dollar"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">127</h3>
+                <p class="stat-label">Quotes Generated</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 15 this week
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card broker">
+            <div class="stat-icon warning">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">$8,950</h3>
+                <p class="stat-label">Monthly Commission</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 12% vs last month
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card broker">
+            <div class="stat-icon info">
+                <i class="fas fa-percentage"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">68%</h3>
+                <p class="stat-label">Conversion Rate</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> Above average
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <!-- Recent Quotes -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Recent Quotes</h5>
+                <div class="card-actions">
+                    <select class="form-select form-select-sm me-2" style="width: auto;">
+                        <option>All Statuses</option>
+                        <option>Pending</option>
+                        <option>Accepted</option>
+                        <option>Declined</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-plus me-1"></i>New Quote
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Quote #</th>
+                                <th>Client</th>
+                                <th>Premium</th>
+                                <th>Commission</th>
+                                <th>Status</th>
+                                <th>Valid Until</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>#QTE-2024-001</strong></td>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>ABC Logistics</strong>
+                                        <br><small class="text-muted">15 vehicles</small>
+                                    </div>
+                                </td>
+                                <td><strong>$2,450/mo</strong></td>
+                                <td class="commission-amount">$245</td>
+                                <td><span class="badge bg-warning">Pending</span></td>
+                                <td>2024-11-15</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-success">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#QTE-2024-002</strong></td>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>XYZ Transport</strong>
+                                        <br><small class="text-muted">8 vehicles</small>
+                                    </div>
+                                </td>
+                                <td><strong>$1,890/mo</strong></td>
+                                <td class="commission-amount">$189</td>
+                                <td><span class="badge bg-success">Accepted</span></td>
+                                <td>2024-11-20</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-info">
+                                        <i class="fas fa-file-contract"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>#QTE-2024-003</strong></td>
+                                <td>
+                                    <div class="client-info">
+                                        <strong>Fleet Masters Inc</strong>
+                                        <br><small class="text-muted">22 vehicles</small>
+                                    </div>
+                                </td>
+                                <td><strong>$3,200/mo</strong></td>
+                                <td class="commission-amount">$320</td>
+                                <td><span class="badge bg-primary">Under Review</span></td>
+                                <td>2024-11-25</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-warning">
+                                        <i class="fas fa-clock"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Client Portfolio -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Client Portfolio Performance</h5>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-outline-secondary">
+                        <i class="fas fa-chart-line me-1"></i>View Analytics
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="portfolio-metric">
+                            <div class="metric-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h4>$125K</h4>
+                                <p>Total Annual Premium</p>
+                                <small class="text-success">+18% YoY</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="portfolio-metric">
+                            <div class="metric-icon success">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h4>89</h4>
+                                <p>Active Policies</p>
+                                <small class="text-info">Excellent retention</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="portfolio-metric">
+                            <div class="metric-icon warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="metric-content">
+                                <h4>12</h4>
+                                <p>Claims This Month</p>
+                                <small class="text-warning">Monitor closely</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-lg-4">
+        <!-- Commission Tracker -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Commission Tracker</h5>
+            </div>
+            <div class="card-body">
+                <div class="commission-summary">
+                    <div class="commission-item">
+                        <div class="commission-period">
+                            <strong>This Month</strong>
+                            <span class="commission-amount large">$8,950</span>
+                        </div>
+                        <div class="commission-progress">
+                            <div class="progress">
+                                <div class="progress-bar bg-success" style="width: 75%"></div>
+                            </div>
+                            <small class="text-muted">75% of target ($12,000)</small>
+                        </div>
+                    </div>
+                    <div class="commission-breakdown">
+                        <div class="breakdown-item">
+                            <span>New Business</span>
+                            <strong>$5,200</strong>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Renewals</span>
+                            <strong>$2,890</strong>
+                        </div>
+                        <div class="breakdown-item">
+                            <span>Endorsements</span>
+                            <strong>$860</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Provider Partners -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Provider Partners</h5>
+            </div>
+            <div class="card-body">
+                <div class="provider-list">
+                    <div class="provider-item">
+                        <div class="provider-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="provider-info">
+                            <strong>Premier Insurance</strong>
+                            <div class="provider-stats">
+                                <small>15 active policies</small>
+                                <span class="badge bg-success ms-2">A+ Rated</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="provider-item">
+                        <div class="provider-logo">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="provider-info">
+                            <strong>SecureFleet Corp</strong>
+                            <div class="provider-stats">
+                                <small>22 active policies</small>
+                                <span class="badge bg-primary ms-2">Preferred</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="provider-item">
+                        <div class="provider-logo">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div class="provider-info">
+                            <strong>AutoGuard Plus</strong>
+                            <div class="provider-stats">
+                                <small>8 active policies</small>
+                                <span class="badge bg-info ms-2">New Partner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Tools -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Broker Tools</h5>
+            </div>
+            <div class="card-body">
+                <div class="broker-tools">
+                    <button class="tool-btn">
+                        <i class="fas fa-calculator"></i>
+                        <span>Premium Calculator</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-file-pdf"></i>
+                        <span>Generate Proposal</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-search"></i>
+                        <span>Risk Assessment</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-envelope"></i>
+                        <span>Client Communication</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card.broker {
+    border-left: 4px solid transparent;
+    border-image: var(--success-gradient) 1;
+}
+
+.commission-amount {
+    font-weight: 700;
+    color: var(--success-color);
+}
+
+.client-info strong {
+    color: var(--dark-color);
+}
+
+.portfolio-metric {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.portfolio-metric:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-3px);
+}
+
+.metric-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin: 0 auto 1rem;
+    font-size: 1.3rem;
+}
+
+.metric-icon.success {
+    background: var(--success-gradient);
+}
+
+.metric-icon.warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.metric-content h4 {
+    font-weight: 800;
+    color: var(--dark-color);
+    margin-bottom: 0.25rem;
+    font-size: 1.8rem;
+}
+
+.metric-content p {
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: 0.25rem;
+    font-weight: 500;
+}
+
+.commission-summary {
+    text-align: center;
+}
+
+.commission-period {
+    margin-bottom: 1rem;
+}
+
+.commission-amount.large {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--success-color);
+    display: block;
+    margin-top: 0.5rem;
+}
+
+.commission-progress {
+    margin-bottom: 1.5rem;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(102, 126, 234, 0.1);
+    margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+    border-radius: 4px;
+}
+
+.commission-breakdown {
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    padding-top: 1rem;
+}
+
+.breakdown-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.breakdown-item span {
+    color: var(--dark-color);
+    opacity: 0.8;
+}
+
+.breakdown-item strong {
+    color: var(--dark-color);
+    font-weight: 600;
+}
+
+.provider-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.provider-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.provider-item:hover {
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateX(5px);
+}
+
+.provider-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: var(--success-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.provider-info {
+    flex: 1;
+}
+
+.provider-info strong {
+    color: var(--dark-color);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.provider-stats {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+}
+
+.provider-stats small {
+    color: var(--dark-color);
+    opacity: 0.7;
+}
+
+.broker-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.tool-btn {
+    background: rgba(102, 126, 234, 0.05);
+    border: 2px solid rgba(102, 126, 234, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    color: var(--dark-color);
+    text-decoration: none;
+}
+
+.tool-btn:hover {
+    background: var(--success-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.tool-btn i {
+    font-size: 1.3rem;
+}
+
+.tool-btn span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.form-select {
+    border-radius: var(--border-radius);
+    border: 2px solid rgba(102, 126, 234, 0.1);
+}
+
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+@@media (max-width: 768px) {
+    .portfolio-metric {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .metric-content h4 {
+        font-size: 1.5rem;
+    }
+
+    .commission-amount.large {
+        font-size: 2rem;
+    }
+
+    .broker-tools {
+        grid-template-columns: 1fr;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .card-actions .form-select {
+        width: 100% !important;
+    }
+}
+</style>
+
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+@functions {
+    public class BrokerPortalModel : PageModel
+    {
+        public void OnGet()
+        {
+        }
+    }
+}

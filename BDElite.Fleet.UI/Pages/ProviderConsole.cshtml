@@ -1,0 +1,687 @@
+@page
+@model ProviderConsoleModel
+@{
+    ViewData["Title"] = "Insurance Provider Console";
+}
+
+<div class="dashboard-header mb-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+            <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h1 class="dashboard-title">Insurance Provider Console</h1>
+            <p class="dashboard-subtitle">Manage products, rates, and business analytics</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/AddProduct" class="btn btn-info me-2">
+                <i class="fas fa-plus me-2"></i>New Product
+            </a>
+            <button class="btn btn-primary">
+                <i class="fas fa-chart-bar me-2"></i>Analytics
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Dashboard Stats -->
+<div class="row mb-4">
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card provider">
+            <div class="stat-icon">
+                <i class="fas fa-boxes"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">@Model.ActiveProductCount</h3>
+                <p class="stat-label">Active Products</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> @Model.Products.Count(p => p.CreatedAt > DateTime.UtcNow.AddMonths(-3)) new this quarter
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card provider">
+            <div class="stat-icon success">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">$2.4M</h3>
+                <p class="stat-label">Premium Written</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 15% vs last year
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card provider">
+            <div class="stat-icon warning">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">0.65</h3>
+                <p class="stat-label">Loss Ratio</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-down"></i> Improved by 8%
+                </small>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-3">
+        <div class="stat-card provider">
+            <div class="stat-icon info">
+                <i class="fas fa-handshake"></i>
+            </div>
+            <div class="stat-content">
+                <h3 class="stat-number">156</h3>
+                <p class="stat-label">Partner Brokers</p>
+                <small class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i> 12 new partnerships
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <!-- Product Performance -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Product Performance</h5>
+                <div class="card-actions">
+                    <select class="form-select form-select-sm me-2" style="width: auto;">
+                        <option>Last 12 Months</option>
+                        <option>Last 6 Months</option>
+                        <option>Last 3 Months</option>
+                        <option>Year to Date</option>
+                    </select>
+                    <button class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-download me-1"></i>Export
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th>Premium Written</th>
+                                <th>Claims Paid</th>
+                                <th>Loss Ratio</th>
+                                <th>Policies</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-danger">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>@Model.ErrorMessage
+                                    </td>
+                                </tr>
+                            }
+                            else if (!Model.Products.Any())
+                            {
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">
+                                        <i class="fas fa-plus-circle me-2"></i>No products found. <a href="/AddProduct" class="text-decoration-none">Create your first product</a>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                @foreach (var product in Model.Products)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="product-info">
+                                                <div class="product-icon">
+                                                    <i class="fas fa-shield-alt"></i>
+                                                </div>
+                                                <div>
+                                                    <strong>@product.Name</strong>
+                                                    <br><small class="text-muted">@product.ProductCode</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><strong>£@product.BaseRate.ToString("N2")</strong></td>
+                                        <td>-</td>
+                                        <td>
+                                            <span class="loss-ratio excellent">-</span>
+                                        </td>
+                                        <td>0</td>
+                                        <td>
+                                            @if (product.IsActive)
+                                            {
+                                                <span class="badge bg-success">Active</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary">Inactive</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary" title="Edit Product">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Analytics -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Risk & Business Analytics</h5>
+                <div class="card-actions">
+                    <button class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-search me-1"></i>Risk Analysis
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <h6>Geographic Distribution</h6>
+                                <span class="badge bg-info">Top Performing Regions</span>
+                            </div>
+                            <div class="analytics-content">
+                                <div class="region-item">
+                                    <span class="region-name">California</span>
+                                    <div class="region-stats">
+                                        <span class="region-premium">$680K</span>
+                                        <span class="region-ratio good">0.58</span>
+                                    </div>
+                                </div>
+                                <div class="region-item">
+                                    <span class="region-name">Texas</span>
+                                    <div class="region-stats">
+                                        <span class="region-premium">$520K</span>
+                                        <span class="region-ratio good">0.62</span>
+                                    </div>
+                                </div>
+                                <div class="region-item">
+                                    <span class="region-name">Florida</span>
+                                    <div class="region-stats">
+                                        <span class="region-premium">$340K</span>
+                                        <span class="region-ratio excellent">0.45</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="analytics-card">
+                            <div class="analytics-header">
+                                <h6>Industry Segments</h6>
+                                <span class="badge bg-success">Growth Opportunities</span>
+                            </div>
+                            <div class="analytics-content">
+                                <div class="segment-item">
+                                    <div class="segment-info">
+                                        <span class="segment-name">Logistics & Delivery</span>
+                                        <small class="text-muted">45% of portfolio</small>
+                                    </div>
+                                    <div class="segment-growth">+12%</div>
+                                </div>
+                                <div class="segment-item">
+                                    <div class="segment-info">
+                                        <span class="segment-name">Construction</span>
+                                        <small class="text-muted">30% of portfolio</small>
+                                    </div>
+                                    <div class="segment-growth">+8%</div>
+                                </div>
+                                <div class="segment-item">
+                                    <div class="segment-info">
+                                        <span class="segment-name">Food Service</span>
+                                        <small class="text-muted">25% of portfolio</small>
+                                    </div>
+                                    <div class="segment-growth">+15%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="col-lg-4">
+        <!-- Rate Management -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Rate Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="rate-alerts">
+                    <div class="alert-item urgent">
+                        <div class="alert-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <strong>Rate Review Required</strong>
+                            <p>Express Delivery Pro showing poor performance</p>
+                            <button class="btn btn-sm btn-warning">Review Rates</button>
+                        </div>
+                    </div>
+                    <div class="alert-item info">
+                        <div class="alert-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <strong>Market Analysis</strong>
+                            <p>Competitor rates updated - review recommended</p>
+                            <button class="btn btn-sm btn-info">View Analysis</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Brokers -->
+        <div class="dashboard-card mb-4">
+            <div class="card-header">
+                <h5 class="card-title">Top Performing Brokers</h5>
+            </div>
+            <div class="card-body">
+                <div class="broker-rankings">
+                    <div class="broker-item">
+                        <div class="broker-rank">1</div>
+                        <div class="broker-info">
+                            <strong>Elite Insurance Partners</strong>
+                            <div class="broker-stats">
+                                <small>$450K premium • 45 policies</small>
+                            </div>
+                        </div>
+                        <div class="broker-badge">
+                            <span class="badge bg-gold">Platinum</span>
+                        </div>
+                    </div>
+                    <div class="broker-item">
+                        <div class="broker-rank">2</div>
+                        <div class="broker-info">
+                            <strong>Metropolitan Brokers</strong>
+                            <div class="broker-stats">
+                                <small>$380K premium • 38 policies</small>
+                            </div>
+                        </div>
+                        <div class="broker-badge">
+                            <span class="badge bg-success">Gold</span>
+                        </div>
+                    </div>
+                    <div class="broker-item">
+                        <div class="broker-rank">3</div>
+                        <div class="broker-info">
+                            <strong>Coastal Insurance Group</strong>
+                            <div class="broker-stats">
+                                <small>$320K premium • 32 policies</small>
+                            </div>
+                        </div>
+                        <div class="broker-badge">
+                            <span class="badge bg-info">Silver</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Provider Tools -->
+        <div class="dashboard-card">
+            <div class="card-header">
+                <h5 class="card-title">Provider Tools</h5>
+            </div>
+            <div class="card-body">
+                <div class="provider-tools">
+                    <button class="tool-btn">
+                        <i class="fas fa-calculator"></i>
+                        <span>Rate Calculator</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-chart-pie"></i>
+                        <span>Risk Modeling</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-balance-scale"></i>
+                        <span>Underwriting Rules</span>
+                    </button>
+                    <button class="tool-btn">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Financial Reports</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.stat-card.provider {
+    border-left: 4px solid transparent;
+    border-image: var(--secondary-gradient) 1;
+}
+
+.product-info {
+    display: flex;
+    align-items: center;
+}
+
+.product-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: var(--secondary-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 1rem;
+    font-size: 1.1rem;
+}
+
+.loss-ratio {
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+
+.loss-ratio.excellent {
+    background: rgba(0, 242, 254, 0.1);
+    color: var(--success-color);
+}
+
+.loss-ratio.good {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+}
+
+.loss-ratio.poor {
+    background: rgba(245, 87, 108, 0.1);
+    color: var(--accent-color);
+}
+
+.analytics-card {
+    background: rgba(102, 126, 234, 0.05);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    height: 100%;
+}
+
+.analytics-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.analytics-header h6 {
+    font-weight: 700;
+    color: var(--dark-color);
+    margin-bottom: 0;
+}
+
+.region-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.region-item:last-child {
+    border-bottom: none;
+}
+
+.region-name {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.region-stats {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.region-premium {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.region-ratio {
+    font-weight: 700;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+}
+
+.segment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.segment-item:last-child {
+    border-bottom: none;
+}
+
+.segment-info {
+    flex: 1;
+}
+
+.segment-name {
+    font-weight: 600;
+    color: var(--dark-color);
+    display: block;
+}
+
+.segment-growth {
+    font-weight: 700;
+    color: var(--success-color);
+    font-size: 1.1rem;
+}
+
+.rate-alerts {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.alert-item {
+    display: flex;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    align-items: flex-start;
+}
+
+.alert-item.urgent {
+    background: rgba(245, 87, 108, 0.05);
+    border-left: 4px solid var(--accent-color);
+}
+
+.alert-item.info {
+    background: rgba(102, 126, 234, 0.05);
+    border-left: 4px solid var(--primary-color);
+}
+
+.alert-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.alert-item.urgent .alert-icon {
+    background: var(--accent-color);
+    color: white;
+}
+
+.alert-item.info .alert-icon {
+    background: var(--primary-color);
+    color: white;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-content strong {
+    color: var(--dark-color);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.alert-content p {
+    color: var(--dark-color);
+    opacity: 0.8;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+}
+
+.broker-rankings {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.broker-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(118, 75, 162, 0.05);
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+}
+
+.broker-item:hover {
+    background: rgba(118, 75, 162, 0.1);
+    transform: translateX(5px);
+}
+
+.broker-rank {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--secondary-gradient);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.broker-info {
+    flex: 1;
+}
+
+.broker-info strong {
+    color: var(--dark-color);
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.broker-stats small {
+    color: var(--dark-color);
+    opacity: 0.7;
+}
+
+.bg-gold {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%) !important;
+    color: #8b6f00 !important;
+}
+
+.provider-tools {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.provider-tools .tool-btn {
+    background: rgba(118, 75, 162, 0.05);
+    border: 2px solid rgba(118, 75, 162, 0.1);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+    color: var(--dark-color);
+    text-decoration: none;
+}
+
+.provider-tools .tool-btn:hover {
+    background: var(--secondary-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-medium);
+}
+
+.provider-tools .tool-btn i {
+    font-size: 1.3rem;
+}
+
+.provider-tools .tool-btn span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.2;
+}
+
+@@media (max-width: 768px) {
+    .analytics-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .region-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-end;
+    }
+
+    .provider-tools {
+        grid-template-columns: 1fr;
+    }
+
+    .alert-item {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .alert-icon {
+        margin: 0 0 1rem 0;
+    }
+}
+</style>
+

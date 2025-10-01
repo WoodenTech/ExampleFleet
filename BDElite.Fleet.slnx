@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="BDElite.Fleet.API/BDElite.Fleet.API.csproj" />
+  <Project Path="BDElite.Fleet.UI/BDElite.Fleet.UI.csproj" />
+</Solution>
